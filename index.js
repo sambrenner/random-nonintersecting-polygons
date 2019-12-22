@@ -1,6 +1,6 @@
-const SVG = require('@svgdotjs/svg.js');
-const hull = require('hull.js');
-const Noise = require('noisejs').Noise;
+import { SVG } from '@svgdotjs/svg.js';
+import hull from 'hull.js';
+import { Noise } from 'noisejs';
 
 let draw;
 
@@ -19,7 +19,7 @@ const config = {
 };
 
 document.addEventListener('DOMContentLoaded', () => {
-  draw = new SVG.Svg()
+  draw = new SVG()
     .addTo('#svg-holder')
     .size(304, 304);
 
