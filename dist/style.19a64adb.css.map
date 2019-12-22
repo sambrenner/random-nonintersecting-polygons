@@ -1,0 +1,1 @@
+{"version":3,"sources":["style.css"],"names":[],"mappings":"AAAA,eACI,aACJ,CAEA,WACI,YAAa,CACb,QAAS,CACT,mCACJ","file":"style.19a64adb.css","sourceRoot":"..","sourcesContent":["input, textarea {\n    display: block;\n}\n\n#container {\n    display: grid;\n    gap: 20px;\n    grid-template-columns: 304px 1fr 3fr;\n}\n"]}

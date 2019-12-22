@@ -1,0 +1,12 @@
+input, textarea {
+    display: block;
+}
+
+#container {
+    display: grid;
+    gap: 20px;
+    grid-template-columns: 304px 1fr 3fr;
+}
+
+
+/*# sourceMappingURL=/style.e308ff8e.css.map */
