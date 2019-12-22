@@ -13,7 +13,8 @@
   "dependencies": {
     "@svgdotjs/svg.js": "^3.0.16",
     "hull.js": "^1.0.0",
-    "noisejs": "^2.1.0"
+    "noisejs": "^2.1.0",
+    "simplify-js": "^1.2.3"
   },
   "devDependencies": {
     "cssnano": "^4.1.10"

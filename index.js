@@ -1,22 +1,13 @@
 import { SVG } from '@svgdotjs/svg.js';
 import hull from 'hull.js';
 import { Noise } from 'noisejs';
+import simplify from 'simplify-js';
 
 let draw;
-
 let output;
 let seedOutput;
-
 let noise;
-
-const config = {
-  noise: [],
-  threshold: .9,
-  concavity: 40,
-  resolution: 1,
-  rectilinear: false,
-  seed: null
-};
+let config = {};
 
 document.addEventListener('DOMContentLoaded', () => {
   draw = new SVG()
@@ -35,13 +26,17 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   [...document.querySelectorAll('input')].forEach(input => {
+    const val = getValue(input);
+    config[input.dataset.controls] = val;
+    updateLabel(input, val);
+
     input.addEventListener('input', e => {
       const key = e.target.dataset.controls;
-      const val = e.target.type === 'checkbox'
-        ? e.target.checked
-        : parseFloat(e.target.value);
+      const val = getValue(e.target);
 
       config[key] = val;
+
+      updateLabel(e.target, val);
 
       if (e.target.dataset.shouldRegenerate) {
         if (key === "seed") {
@@ -72,10 +67,17 @@ const generatePoints = () => {
 
   for (let x = 0; x < 100; x++) {
     for (let y = 0; y < 100; y++) {
-      const val = Math.abs(noise.simplex2(
-        Math.floor(x / config.resolution),
-        Math.floor(y / config.resolution)
+      let val = Math.abs(noise.simplex2(
+        x / config.resolution,
+        y / config.resolution
       ));
+
+      let vIntensity = 1000 - config.vignette;
+
+      if (vIntensity) {
+        const vignette = 1 - (Math.hypot(50 - x, 50 - y) / vIntensity);
+        val *= vignette;
+      }
 
       config.noise.push(val);
     }
@@ -99,6 +101,13 @@ const drawPoly = () => {
   if (!points.length) return;
 
   let outline = hull(points, config.concavity);
+
+  if (config.simplify) {
+    outline = simplify(
+      outline.map(p => ({x: p[0], y: p[1]})),
+      config.simplify
+    ).map(p => [p.x, p.y]);
+  }
 
   if (config.rectilinear) {
     outline = outline.reduce((acc, curr, idx, src) => {
@@ -125,3 +134,16 @@ const drawPoly = () => {
 
   output.value = JSON.stringify(outline);
 };
+
+const getValue = elem => {
+  return elem.type === 'checkbox'
+    ? elem.checked
+    : parseFloat(elem.value);
+}
+
+const updateLabel = (elem, val) => {
+  if (elem.type !== 'range') return;
+
+  const label = elem.parentElement;
+  label.querySelector('.val').innerText = val;
+}
